@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Wordcount</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <style>
+      .container {
+        max-width: 1000px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-5 col-sm-offset-1">
+          <h1>Edit account</h1>
+          <br>
+          <form role="form" method="POST" action="/account/finish">
+            <div class="form-group">
+              <input type="text" name="username" class="form-control" id="url-box" placeholder="Pick your username" style="max-width: 300px;">
+            </div>
+            <div class="form-group">
+              <input type="number" name="target" class="form-control" id="target-box" placeholder="Target distance (in Kilometers)" style="max-width: 300px;">
+            </div>
+            <input type="hidden" name="access_token" value="{{ access_token }}">
+            <input type="hidden" name="refresh_token" value="{{ refresh_token }}">
+            <h3>Select activities to track</h3>
+            <div class="checkbox">
+              <label><input type="checkbox" name="Running">Running</label>
+            </div>
+            <div class="checkbox">
+              <label><input type="checkbox" name="Biking">Biking</label>
+            </div>
+            <button type="submit" class="btn btn-default">Submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+  </body>
+</html>
