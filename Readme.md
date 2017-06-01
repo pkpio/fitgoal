@@ -19,7 +19,7 @@ Fitbit
 -------
 Create a [Fitbit app](https://dev.fitbit.com/apps/new) with below values.
 
-- OAuth 2.0 Application Type: Server
+- OAuth 2.0 Application Type: `Server`
 - Callback URL:
 
 ```
