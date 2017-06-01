@@ -54,4 +54,5 @@ docs/_build/
 
 *.DS_Store
 
-
+# App specific
+.secrets
