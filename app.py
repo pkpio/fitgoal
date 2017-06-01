@@ -19,6 +19,10 @@ def account_finish():
 def user_graphs(username):
 	return "Show graphs page of user"
 
+@app.route('/user/<username>/update')
+def user_update(username):
+	return "Update data for user"
+
 @app.route('/widget/sum/<username>')
 def widget_sum(username):
 	return "Graph shows the cumm. distance covered vs cumm. target"
