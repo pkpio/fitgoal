@@ -20,7 +20,8 @@ def account_edit():
 	Login validation and account edit
 	"""
 	oauth.fetch_access_token(request.args.get('code', ''), request.url_root + "account/edit")
-	return oauth.session.token['access_token']
+	return render_template('account_edit.html', access_token=oauth.session.token['access_token'], 
+		refresh_token=oauth.session.token['refresh_token'])
 
 @app.route('/account/finish', methods=['POST'])
 def account_finish():
