@@ -23,8 +23,8 @@ Create a [Fitbit app](https://dev.fitbit.com/apps/new) with below values.
 - Callback URL:
 
 ```
-http://localhost:5000
-https://HEROKU-APP-NAME.herokuapp.com/
+http://localhost:5000/account/edit
+https://HEROKU-APP-NAME.herokuapp.com/account/edit
 ```
 - For local setup, create a file named `.secrets` with following template and values of your Fitbit app
 ```shell
