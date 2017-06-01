@@ -12,9 +12,8 @@ Heroku
 --------
 Below steps are required only of you want to deploy the app to Heroku.
 
-- Install [Heroku cli](https://devcenter.heroku.com/articles/heroku-cli), [login](https://devcenter.heroku.com/articles/heroku-cli#getting-started) and [add your ssh key to heroku](https://devcenter.heroku.com/articles/keys#adding-keys-to-heroku)
+- Install [Heroku cli](https://devcenter.heroku.com/articles/heroku-cli) and [login](https://devcenter.heroku.com/articles/heroku-cli#getting-started)
 - Create a Heroku app `heroku create YOUR-APP-NAME` (pick a app name)
-- Add remote branch `git remote add heroku git@heroku.com:YOUR-APP-NAME.git`
 
 
 # Running
