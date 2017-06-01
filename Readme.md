@@ -47,4 +47,4 @@ Locally
 
 Heroku
 --------
-- Push code to Heroku `git push heroku master`
+- Push code to Heroku `git push heroku`
