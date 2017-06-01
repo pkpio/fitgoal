@@ -1,0 +1,13 @@
+{
+  "name": "Fitness Goals",
+  "description": "Fitness goal tracking app",
+  "keywords": [
+    "Fitbit",
+    "Goal",
+    "Fitness"
+  ],
+  "repository": "https://github.com/praveendath92/fitgoal",
+  "addons": [
+    "heroku-postgresql"
+  ]
+}
