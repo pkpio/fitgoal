@@ -1,25 +1,26 @@
 import os
 from flask import Flask, render_template, request
-
-# constants
-FITBIT_AUTH_BASE = "https://www.fitbit.com/oauth2/authorize?response_type=code&scope=activity&expires_in=604800"
+from fitbit.api import FitbitOauth2Client
 
 app = Flask(__name__, static_url_path='/static')
+oauth = FitbitOauth2Client(os.environ['FITBIT_APP_ID'], os.environ['FITBIT_APP_SECRET'])
 
 @app.route('/account/login')
 def account_login():
 	"""
 	Login page for user to start the login process.
 	"""
-	auth_url = FITBIT_AUTH_BASE + "&client_id={}&redirect_uri={}".format(os.environ['FITBIT_APP_ID'], request.url_root + "account/edit")
-	return render_template('login.html', fitbit_auth_url=auth_url)
+	url,_ = oauth.authorize_token_url(redirect_uri=request.url_root + "account/edit", 
+		scope=['activity'])
+	return render_template('login.html', fitbit_auth_url=url)
 
 @app.route('/account/edit', methods=['GET'])
 def account_edit():
 	"""
 	Login validation and account edit
 	"""
-	return request.args.get('code', '')
+	oauth.fetch_access_token(request.args.get('code', ''), request.url_root + "account/edit")
+	return oauth.session.token['access_token']
 
 @app.route('/account/finish', methods=['POST'])
 def account_finish():
