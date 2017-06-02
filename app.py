@@ -42,7 +42,7 @@ def account_finish():
 	activities = []
 	if request.form.get('Running', None):
 		activities.append('Run')
-	if request.form.get('Bike', None):
+	if request.form.get('Biking', None):
 		activities.append('Bike')
 	try:
 		user = User(username=request.form['username'], access_token=request.form['access_token'], 
@@ -60,8 +60,9 @@ def user_graphs(username):
 	Graphs of user.
 	"""
 	user = User.query.filter_by(username=username).first()
-	print(user.distances)
-	return "Show graphs page of user"
+	if not user:
+		return 'User {} not found'.format(username)
+	return render_template('graphs.html', distances=user.distances, target=user.target)
 
 @app.route('/user/<username>/update')
 def user_update(username):
@@ -69,8 +70,10 @@ def user_update(username):
 	Update data for given user.
 	"""
 	user = User.query.filter_by(username=username).first()
+	if not user:
+		return 'User {} not found'.format(username)
 	fitbit_activity = FitbitActivity(client_id, client_secret, access_token=user.access_token, 
-		refresh_token=user.refresh_token)
+		refresh_token=user.refresh_token, types=user.activities)
 	user.distances = fitbit_activity.get_distances()
 	user.access_token = fitbit_activity.access_token();
 	user.refresh_token = fitbit_activity.refresh_token();
