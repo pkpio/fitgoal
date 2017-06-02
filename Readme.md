@@ -38,6 +38,15 @@ heroku config:set FITBIT_APP_ID="OAuth 2.0 Client ID"
 heroku config:set FITBIT_APP_SECRET="Client Secret"
 ```
 
+Database
+--------
+- Install [Postgres](https://www.postgresql.org/download/)
+- Open Postgres shell `psql`
+- Create a database `create database fitgoal;` and exit `\q`
+- Setup local database `python manage.py db upgrade`
+- Enable Postgres on Heroku `heroku addons:create heroku-postgresql:hobby-dev`
+- Setup heroku database `heroku run python manage.py db upgrade`
+
 
 # Running
 ------------------------
