@@ -4,11 +4,12 @@
     {% include "bootstrap.html" %}
   </head>
   <body>
-    {% with title="Fitgoal - Track distance covered this year" %}
+    {% with title="Fitgoal - Setup finish" %}
     {% include "header.html" %}
     {% endwith %}
     <center>
-      <a href="{{ fitbit_auth_url }}" class="btn btn-default">Login with Fitbit</a>
+      <h4>Setup successful for {{ username }}</h4>
+      <a href="/update/{{ username }}" class="btn btn-default">See your graph with latest data</a>
     </center>
     {% include "footer.html" %}
   </body>

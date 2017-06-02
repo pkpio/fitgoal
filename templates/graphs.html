@@ -5,45 +5,12 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.3.0/Chart.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/angular.chartjs/1.1.1/angular-chart.min.js"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='graphs.js') }}"></script>
-	<style>
-	.caption {
-		margin: 20px 10px 10px 10px;
-	    font-size: 16px;
-	}
-	.title {
-	    font-weight: 400;
-	    font-size: 16px;
-	    background-color: #2196F3;
-	    padding: 10px;
-	    color: white;
-	    margin: 0px 0px 20px 0px;
-	}
-	body {
-		margin:0px;
-		font-family: RobotoDraft,Roboto,'Helvetica Neue',sans-serif;
-	}
-	.chart {
-		max-width: 800px;
-	}
-	.footer {
-		position: relative;
-	    margin-top: 30px;
-	    padding-top: 20px;
-	    padding-bottom: 20px;
-	    font-size: 13px;
-	    line-height: 1.5;
-	    color: #767676;
-	    border-top: 1px solid #eee;
-	}
-	.footer a{
-		color: #767676;
-	    text-decoration: none;
-	    padding: 0px 70px 0px 70px
-	}
-	</style>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body ng-controller="MainController">
-	<center class="title">Activities in 2017</center>
+	{% with title="Fitgoal - Activities 2017" %}
+	{% include "header.html" %}
+	{% endwith %}
 	<center id="graphs" ng-init="init( {{ distances }}, {{ target }} )">
 		<center class="caption">Distance covered vs Expected (Kilometers)</center>
 		<canvas id="line" class="chart chart-line" chart-data="data"
@@ -59,10 +26,6 @@
 			chart-options="options" chart-dataset-override="datasetOverride" >
 		</canvas>
 	</center>
-	<center class="footer">
-		<a href="https://github.com/praveendath92/">© Praveen</a>
-		<a href="/">Get your graph</a>
-		<a href="https://github.com/praveendath92/fitgoal" align="right">Source code</a>
-	</center>
+	{% include "footer.html" %}
 </body>
 </html>

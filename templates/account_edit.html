@@ -1,21 +1,15 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Fitgoal</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet" media="screen">
-    <style>
-      .container {
-        max-width: 1000px;
-      }
-    </style>
+    {% include "bootstrap.html" %}
   </head>
   <body>
+    {% with title="Fitgoal - User setup" %}
+    {% include "header.html" %}
+    {% endwith %}
     <div class="container">
       <div class="row">
-        <div class="col-sm-5 col-sm-offset-1">
-          <h1>Edit account</h1>
-          <br>
+        <div class="col-md-4 col-md-offset-4">
           <form role="form" method="POST" action="/save">
             <div class="form-group">
               <input type="text" name="username" class="form-control" id="url-box" placeholder="Pick your username" style="max-width: 300px;">
@@ -37,7 +31,6 @@
         </div>
       </div>
     </div>
-    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    {% include "footer.html" %}
   </body>
 </html>

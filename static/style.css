@@ -1,0 +1,37 @@
+.caption {
+	margin: 20px 10px 10px 10px;
+    font-size: 16px;
+}
+.title {
+    font-weight: 400;
+    font-size: 16px;
+    background-color: #2196F3;
+    padding: 10px;
+    color: white;
+    margin: 0px 0px 20px 0px;
+}
+body {
+	margin:0px;
+	font-family: RobotoDraft,Roboto,'Helvetica Neue',sans-serif;
+}
+.chart {
+	max-width: 800px;
+}
+.footer {
+	position: relative;
+    margin-top: 30px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #767676;
+    border-top: 1px solid #eee;
+}
+.footer a{
+	color: #767676;
+    text-decoration: none;
+    padding: 0px 70px 0px 70px
+}
+.container {
+	max-width: 1000px;
+}

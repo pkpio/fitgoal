@@ -52,7 +52,7 @@ def account_finish():
 		db.session.commit()
 	except Exception as e:
 		return "Unable to save to database."
-	return "Finish account setup"
+	return render_template('save.html', username=user.username)
 
 @app.route('/graphs/<username>')
 def user_graphs(username):
@@ -78,7 +78,7 @@ def user_update(username):
 	user.access_token = fitbit_activity.access_token();
 	user.refresh_token = fitbit_activity.refresh_token();
 	db.session.commit()
-	return 'Updated data for {}'.format(user.username)
+	return render_template('update.html', graph_url='/graphs/{}'.format(username))
 
 if __name__ == '__main__':
 	port = int(os.environ.get('PORT', 5000))
