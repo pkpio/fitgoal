@@ -70,12 +70,12 @@ class FitbitActivity(object):
 		Fitbit library takes care of updating access_token based on expiry. This returns the new
 		access_token value.
 		"""
-		return self.fitbit_client.client.token['access_token']
+		return self.fitbit_client.client.session.token['access_token']
 
 	def refresh_token(self):
 		"""
 		Fitbit library takes care of updating access_token based on expiry. This returns the new
 		access_token value.
 		"""
-		return self.fitbit_client.client.token['refresh_token']
+		return self.fitbit_client.client.session.token['refresh_token']
 
