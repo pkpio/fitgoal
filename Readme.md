@@ -1,3 +1,8 @@
+# Fitgoal Intro
+------------------------
+Tracks total distance covered by Fitbit user in this year using simple graphs. Activities types to track can be selected by the user.
+
+
 # Setup
 ------------------------
 
