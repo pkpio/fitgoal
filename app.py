@@ -16,25 +16,25 @@ client_id = os.environ['FITBIT_APP_ID']
 client_secret = os.environ['FITBIT_APP_SECRET']
 oauth = FitbitOauth2Client(client_id, client_secret)
 
-@app.route('/account/login')
+@app.route('/')
 def account_login():
 	"""
 	Login page for user to start the login process.
 	"""
-	url,_ = oauth.authorize_token_url(redirect_uri=request.url_root + "account/edit", 
+	url,_ = oauth.authorize_token_url(redirect_uri=request.url_root + "auth", 
 		scope=['activity'])
 	return render_template('login.html', fitbit_auth_url=url)
 
-@app.route('/account/edit', methods=['GET'])
+@app.route('/auth', methods=['GET'])
 def account_edit():
 	"""
 	Login validation and account edit
 	"""
-	oauth.fetch_access_token(request.args.get('code', ''), request.url_root + "account/edit")
+	oauth.fetch_access_token(request.args.get('code', ''), request.url_root + "auth")
 	return render_template('account_edit.html', access_token=oauth.session.token['access_token'], 
 		refresh_token=oauth.session.token['refresh_token'])
 
-@app.route('/account/finish', methods=['GET', 'POST'])
+@app.route('/save', methods=['GET', 'POST'])
 def account_finish():
 	"""
 	Finalize account setup. Save user handle and keys.
@@ -54,7 +54,7 @@ def account_finish():
 		return "Unable to save to database."
 	return "Finish account setup"
 
-@app.route('/user/<username>')
+@app.route('/graphs/<username>')
 def user_graphs(username):
 	"""
 	Graphs of user.
@@ -64,7 +64,7 @@ def user_graphs(username):
 		return 'User {} not found'.format(username)
 	return render_template('graphs.html', distances=user.distances, target=user.target)
 
-@app.route('/user/<username>/update')
+@app.route('/update/<username>')
 def user_update(username):
 	"""
 	Update data for given user.
