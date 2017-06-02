@@ -1,8 +1,13 @@
 import os
 from flask import Flask, render_template, request
 from fitbit.api import FitbitOauth2Client
+from flask.ext.sqlalchemy import SQLAlchemy
+from models import User
 
-app = Flask(__name__, static_url_path='/static')
+app = Flask(__name__)
+app.config.from_object(os.environ['APP_SETTINGS'])
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
 oauth = FitbitOauth2Client(os.environ['FITBIT_APP_ID'], os.environ['FITBIT_APP_SECRET'])
 
 @app.route('/account/login')
@@ -28,6 +33,19 @@ def account_finish():
 	"""
 	Finalize account setup. Save user handle and keys.
 	"""
+	activities = []
+	if request.form['Running']:
+		activities.append('Running')
+	if request.form['Bike']
+		activities.append('Bike')
+	try:
+		user = User(username=request.form['username'], access_token=request.form['access_token'], 
+			refresh_token=request.form['refresh_token'], target=request.form['target'], 
+			activities=activities)
+		db.session.add(user)
+		db.session.commit()
+	except Exception as e:
+		return "Unable to save to database."
 	return "Finish account setup"
 
 @app.route('/user/<username>')
@@ -43,20 +61,6 @@ def user_update(username):
 	Update data for given user.
 	"""
 	return "Update data for user"
-
-@app.route('/widget/sum/<username>')
-def widget_sum(username):
-	"""
-	Widget for sum of distances for user.
-	"""
-	return "Graph shows the cumm. distance covered vs cumm. target"
-
-@app.route('/widget/diff/<username>')
-def widget_diff(username):
-	"""
-	Widget for diff of distance for user.
-	"""
-	return "Graph shows the difference between cumm. sum vs cumm. target"
 
 if __name__ == '__main__':
   port = int(os.environ.get('PORT', 5000))
