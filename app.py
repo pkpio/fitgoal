@@ -29,15 +29,15 @@ def account_edit():
 	return render_template('account_edit.html', access_token=oauth.session.token['access_token'], 
 		refresh_token=oauth.session.token['refresh_token'])
 
-@app.route('/account/finish', methods=['POST'])
+@app.route('/account/finish', methods=['GET', 'POST'])
 def account_finish():
 	"""
 	Finalize account setup. Save user handle and keys.
 	"""
 	activities = []
-	if request.form['Running']:
+	if request.form.get('Running', None):
 		activities.append('Running')
-	if request.form['Bike']:
+	if request.form.get('Bike', None):
 		activities.append('Bike')
 	try:
 		user = User(username=request.form['username'], access_token=request.form['access_token'], 
