@@ -10,7 +10,7 @@ class User(db.Model):
     refresh_token = db.Column(db.String)
     target = db.Column(db.Integer)
     activities = db.Column(postgresql.ARRAY(db.String))
-    distances = db.Column(postgresql.ARRAY(db.Integer))
+    distances = db.Column(postgresql.ARRAY(db.Float))
 
     def __init__(self, username, access_token, refresh_token, target, activities):
         self.username = username
@@ -21,4 +21,5 @@ class User(db.Model):
         self.distances = []
 
     def __repr__(self):
-        return '<User(username={}, target={}, activities={})'.format(self.username, self.target, self.activities)
+        return '<User(username={}, target={}, activities={})'.format(self.username, self.target, 
+            self.activities)
