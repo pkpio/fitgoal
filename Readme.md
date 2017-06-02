@@ -40,8 +40,7 @@ heroku config:set FITBIT_APP_SECRET="Client Secret"
 
 Database
 --------
-- Install [Postgres](https://www.postgresql.org/download/)
-- Open Postgres shell `psql`
+- Install [Postgres](https://www.postgresql.org/download/) and open Postgres shell `psql`
 - Create a database `create database fitgoal;` and exit `\q`
 - Setup local database `python manage.py db upgrade`
 - Enable Postgres on Heroku `heroku addons:create heroku-postgresql:hobby-dev`
