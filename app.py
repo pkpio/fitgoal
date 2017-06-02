@@ -2,13 +2,14 @@ import os
 from flask import Flask, render_template, request
 from fitbit.api import FitbitOauth2Client
 from flask.ext.sqlalchemy import SQLAlchemy
-from models import User
 
 app = Flask(__name__)
 app.config.from_object(os.environ['APP_SETTINGS'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 oauth = FitbitOauth2Client(os.environ['FITBIT_APP_ID'], os.environ['FITBIT_APP_SECRET'])
+
+from models import User
 
 @app.route('/account/login')
 def account_login():
@@ -36,7 +37,7 @@ def account_finish():
 	activities = []
 	if request.form['Running']:
 		activities.append('Running')
-	if request.form['Bike']
+	if request.form['Bike']:
 		activities.append('Bike')
 	try:
 		user = User(username=request.form['username'], access_token=request.form['access_token'], 
