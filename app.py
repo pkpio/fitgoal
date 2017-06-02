@@ -1,15 +1,20 @@
 import os
 from flask import Flask, render_template, request
 from fitbit.api import FitbitOauth2Client
+import fitbit
 from flask.ext.sqlalchemy import SQLAlchemy
+from activity import FitbitActivity
 
 app = Flask(__name__)
 app.config.from_object(os.environ['APP_SETTINGS'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+START_DATE = "2017-01-01" # Tracking from start of 2017
 
 from models import *
-oauth = FitbitOauth2Client(os.environ['FITBIT_APP_ID'], os.environ['FITBIT_APP_SECRET'])
+client_id = os.environ['FITBIT_APP_ID']
+client_secret = os.environ['FITBIT_APP_SECRET']
+oauth = FitbitOauth2Client(client_id, client_secret)
 
 @app.route('/account/login')
 def account_login():
@@ -36,7 +41,7 @@ def account_finish():
 	"""
 	activities = []
 	if request.form.get('Running', None):
-		activities.append('Running')
+		activities.append('Run')
 	if request.form.get('Bike', None):
 		activities.append('Bike')
 	try:
@@ -54,6 +59,8 @@ def user_graphs(username):
 	"""
 	Graphs of user.
 	"""
+	user = User.query.filter_by(username=username).first()
+	print(user.distances)
 	return "Show graphs page of user"
 
 @app.route('/user/<username>/update')
@@ -61,7 +68,14 @@ def user_update(username):
 	"""
 	Update data for given user.
 	"""
-	return "Update data for user"
+	user = User.query.filter_by(username=username).first()
+	fitbit_activity = FitbitActivity(client_id, client_secret, access_token=user.access_token, 
+		refresh_token=user.refresh_token)
+	user.distances = fitbit_activity.get_distances()
+	user.access_token = fitbit_activity.access_token();
+	user.refresh_token = fitbit_activity.refresh_token();
+	db.session.commit()
+	return 'Updated data for {}'.format(user.username)
 
 if __name__ == '__main__':
 	port = int(os.environ.get('PORT', 5000))
