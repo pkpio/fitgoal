@@ -30,7 +30,7 @@ Create a [Fitbit app](https://dev.fitbit.com/apps/new) with below values.
 
 ```
 http://localhost:5000/account/edit
-http://HEROKU-APP-NAME.herokuapp.com/account/edit
+http://HEROKU-APP-NAME.herokuapp.com/auth
 ```
 - For local setup, create a file named `.secrets` with following template and values of your Fitbit app
 ```shell
