@@ -32,6 +32,13 @@ Create a [Fitbit app](https://dev.fitbit.com/apps/new) with below values.
 http://localhost:5000/account/edit
 http://HEROKU-APP-NAME.herokuapp.com/auth
 ```
+- Add a subscriber (only for heroku or remote deployments)
+```
+Default
+Endpoint URL: https://HEROKU-APP-NAME.herokuapp.com/update
+Type: JSON Body
+Subscriber ID: 1
+```
 - For local setup, create a file named `.secrets` with following template and values of your Fitbit app
 ```shell
 export FITBIT_APP_ID="OAuth 2.0 Client ID"
@@ -41,7 +48,9 @@ export FITBIT_APP_SECRET="Client Secret"
 ```shell
 heroku config:set FITBIT_APP_ID="OAuth 2.0 Client ID"
 heroku config:set FITBIT_APP_SECRET="Client Secret"
+heroku config:set FITBIT_VERIFICATION_CODE="Subscriber Verification Code"
 ```
+- Setup
 
 Database
 --------
