@@ -6,6 +6,7 @@ class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, nullable=False, unique=True)
+    fitbitid = db.Column(db.String)
     access_token = db.Column(db.String)
     refresh_token = db.Column(db.String)
     token_expires_at = db.Column(db.Float)
@@ -13,8 +14,10 @@ class User(db.Model):
     activities = db.Column(postgresql.ARRAY(db.String))
     distances = db.Column(postgresql.ARRAY(db.Float))
 
-    def __init__(self, username, access_token, refresh_token, token_expires_at, target, activities):
+    def __init__(self, username, fitbitid, access_token, refresh_token, token_expires_at, target, 
+        activities):
         self.username = username
+        self.fitbitid = fitbitid
         self.access_token = access_token
         self.refresh_token = refresh_token
         self.token_expires_at = token_expires_at
