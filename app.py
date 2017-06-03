@@ -4,6 +4,7 @@ from fitbit.api import FitbitOauth2Client
 import fitbit
 from flask.ext.sqlalchemy import SQLAlchemy
 from activity import FitbitActivity
+import json
 
 app = Flask(__name__)
 app.config.from_object(os.environ['APP_SETTINGS'])
@@ -14,6 +15,7 @@ START_DATE = "2017-01-01" # Tracking from start of 2017
 from models import *
 client_id = os.environ['FITBIT_APP_ID']
 client_secret = os.environ['FITBIT_APP_SECRET']
+verification_code = os.environ['FITBIT_VERIFICATION_CODE']
 oauth = FitbitOauth2Client(client_id, client_secret)
 
 @app.route('/')
@@ -74,14 +76,10 @@ def user_graphs(username):
 		return 'User {} not found'.format(username)
 	return render_template('graphs.html', distances=user.distances, target=user.target)
 
-@app.route('/update/<username>')
-def user_update(username):
+def update_data(user):
 	"""
 	Update data for given user.
 	"""
-	user = User.query.filter_by(username=username).first()
-	if not user:
-		return 'User {} not found'.format(username)
 	fitbit_activity = FitbitActivity(client_id, client_secret, access_token=user.access_token, 
 		refresh_token=user.refresh_token, token_expires_at=user.token_expires_at,
 		types=user.activities)
@@ -90,7 +88,40 @@ def user_update(username):
 	user.refresh_token = fitbit_activity.refresh_token();
 	user.token_expires_at = fitbit_activity.token_expires_at();
 	db.session.commit()
-	return render_template('update.html', graph_url='/graphs/{}'.format(username))
+
+@app.route('/update/<username>')
+def update_manual(username):
+	"""
+	Update data for given username.
+	"""
+	user = User.query.filter_by(username=username).first()
+	if not user:
+		return 'User {} not found'.format(username)
+	update_data(user)
+	return render_template('update.html', graph_url='/graphs/{}'.format(user.username))
+
+@app.route('/update', methods=['POST'])
+def update_fitbit_push():
+	"""
+	This endpoint is called by fitbit whenever there is a new activity for a user. Update by push.
+	"""
+	fitbitid = json.loads(request.get_json(force=True))[0]['ownerId']
+	user = User.query.filter_by(fitbitid=fitbitid).first()
+	if user:
+		update_data(user)
+	return 'thanks fitbit', 204
+
+@app.route('/update', methods=['GET'])
+def verify_subscription():
+	"""
+	This endpoint is called by fitbit for verification of subscription endpoint.
+	"""
+	received_code = request.args.get('verify', '')
+	print(verification_code)
+	if received_code == verification_code:
+		return 'correct', 204
+	else:
+		return 'incorrect', 404
 
 if __name__ == '__main__':
 	port = int(os.environ.get('PORT', 5000))
