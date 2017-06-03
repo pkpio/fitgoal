@@ -7,10 +7,17 @@ from convertor import Convertor
 class FitbitActivity(object):
 	"""Fitbit Activity class"""
 
-	def __init__(self, client_id, client_secret, access_token, refresh_token, types=['Run']):
+	def __init__(self, client_id, client_secret, access_token, refresh_token, token_expires_at=None, 
+		types=['Run']):
 		self.fitbit_client = fitbit.Fitbit(client_id, client_secret, access_token=access_token, 
-			refresh_token=refresh_token)
+			refresh_token=refresh_token, expires_at=token_expires_at, 
+			refresh_cb=self.refresh_token_cb)
+		self.token = self.fitbit_client.client.session.token
 		self.activity_types = types
+
+	def refresh_token_cb(self, token):
+		print('Access token updated')
+		self.token = token
 
 	def get_activity_distances(self, dist_data, start_date=None, callurl=None):
 		"""
@@ -70,12 +77,19 @@ class FitbitActivity(object):
 		Fitbit library takes care of updating access_token based on expiry. This returns the new
 		access_token value.
 		"""
-		return self.fitbit_client.client.session.token['access_token']
+		return self.token['access_token']
 
 	def refresh_token(self):
 		"""
 		Fitbit library takes care of updating access_token based on expiry. This returns the new
 		access_token value.
 		"""
-		return self.fitbit_client.client.session.token['refresh_token']
+		return self.token['refresh_token']
+
+	def token_expires_at(self):
+		"""
+		Fitbit library takes care of updating access_token based on expiry. This returns the new
+		access_token value.
+		"""
+		return self.token['expires_at']
 
