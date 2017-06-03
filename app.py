@@ -22,7 +22,7 @@ def account_login():
 	Login page for user to start the login process.
 	"""
 	url,_ = oauth.authorize_token_url(redirect_uri=request.url_root + "auth", 
-		scope=['activity'])
+		scope=['activity', 'profile'])
 	return render_template('login.html', fitbit_auth_url=url)
 
 @app.route('/auth', methods=['GET'])
@@ -46,8 +46,13 @@ def account_finish():
 	if request.form.get('Biking', None):
 		activities.append('Bike')
 	try:
+		fitbit_client = fitbit.Fitbit(client_id, client_secret, 
+			access_token=request.form['access_token'], 
+			refresh_token=request.form['refresh_token'])
+		profile = fitbit_client.user_profile_get()
 		user = User(
-			username=request.form['username'], 
+			username=request.form['username'],
+			fitbitid=profile['user']['encodedId'],
 			access_token=request.form['access_token'], 
 			refresh_token=request.form['refresh_token'], 
 			token_expires_at=request.form['token_expiry_at'],
