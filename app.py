@@ -32,7 +32,8 @@ def account_edit():
 	"""
 	oauth.fetch_access_token(request.args.get('code', ''), request.url_root + "auth")
 	return render_template('account_edit.html', access_token=oauth.session.token['access_token'], 
-		refresh_token=oauth.session.token['refresh_token'])
+		refresh_token=oauth.session.token['refresh_token'], 
+		token_expiry_at=oauth.session.token['expires_at'])
 
 @app.route('/save', methods=['GET', 'POST'])
 def account_finish():
@@ -45,9 +46,13 @@ def account_finish():
 	if request.form.get('Biking', None):
 		activities.append('Bike')
 	try:
-		user = User(username=request.form['username'], access_token=request.form['access_token'], 
-			refresh_token=request.form['refresh_token'], target=request.form['target'], 
-			activities=activities)
+		user = User(
+			username=request.form['username'], 
+			access_token=request.form['access_token'], 
+			refresh_token=request.form['refresh_token'], 
+			token_expires_at=request.form['token_expiry_at'],
+			target=request.form['target'], activities=activities
+			)
 		db.session.add(user)
 		db.session.commit()
 	except Exception as e:
@@ -73,10 +78,12 @@ def user_update(username):
 	if not user:
 		return 'User {} not found'.format(username)
 	fitbit_activity = FitbitActivity(client_id, client_secret, access_token=user.access_token, 
-		refresh_token=user.refresh_token, types=user.activities)
+		refresh_token=user.refresh_token, token_expires_at=user.token_expires_at,
+		types=user.activities)
 	user.distances = fitbit_activity.get_distances()
 	user.access_token = fitbit_activity.access_token();
 	user.refresh_token = fitbit_activity.refresh_token();
+	user.token_expires_at = fitbit_activity.token_expires_at();
 	db.session.commit()
 	return render_template('update.html', graph_url='/graphs/{}'.format(username))
 
