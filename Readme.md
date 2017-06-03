@@ -50,9 +50,8 @@ heroku config:set FITBIT_APP_ID="OAuth 2.0 Client ID"
 heroku config:set FITBIT_APP_SECRET="Client Secret"
 heroku config:set FITBIT_VERIFICATION_CODE="Subscriber Verification Code"
 ```
-- Setup
 
-Database
+Setup Database
 --------
 - Install [Postgres](https://www.postgresql.org/download/) and open Postgres shell `psql`
 - Create a database `create database fitgoal;` and exit `\q`
@@ -71,3 +70,4 @@ Locally
 Heroku
 --------
 - Push code to Heroku `git push heroku`
+- Verify Subscribers endpoint from your [Fitbit app's page](https://dev.fitbit.com/apps).
