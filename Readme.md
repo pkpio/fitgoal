@@ -1,11 +1,11 @@
 # Fitgoal Intro
 ------------------------
-Tracks total distance covered by Fitbit user in this year using simple graphs. Activities types to track can be selected by the user.
+Tracks total distance covered by Fitbit user in this year using [simple graphs](https://fitgoal.pkp.io/graphs/347TCH). Activities to track can be selected by the user.
 
 
 # Setup
 ------------------------
-These instructions are for deploying your own version of this app. For normal use, you can just use the website in description. 
+These instructions are for deploying your own version of this app. For normal use, you can just use the [website](https://fitgoal.pkp.io).
 
 Local
 -------
@@ -20,7 +20,7 @@ Heroku (optional)
 Below steps are required only if you want to deploy the app to Heroku.
 
 - Install [Heroku cli](https://devcenter.heroku.com/articles/heroku-cli) and [login](https://devcenter.heroku.com/articles/heroku-cli#getting-started)
-- Create a Heroku app `heroku create HEROKU-APP-NAME` (pick a app name)
+- Create a Heroku app `heroku create HEROKU-APP-NAME` (pick your app name)
 - Set deploy configuration `heroku config:set APP_SETTINGS=config.StagingConfig`
 - Enable Redis `heroku addons:create heroku-redis:hobby-dev`
 
