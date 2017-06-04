@@ -16,7 +16,7 @@ Local
 
 Heroku (optional)
 --------
-Below steps are required only of you want to deploy the app to Heroku.
+Below steps are required only if you want to deploy the app to Heroku.
 
 - Install [Heroku cli](https://devcenter.heroku.com/articles/heroku-cli) and [login](https://devcenter.heroku.com/articles/heroku-cli#getting-started)
 - Create a Heroku app `heroku create HEROKU-APP-NAME` (pick a app name)
