@@ -95,6 +95,7 @@ def update_data(fitbitid):
 	user.refresh_token = fitbit_activity.refresh_token();
 	user.token_expires_at = fitbit_activity.token_expires_at();
 	db.session.commit()
+	return True
 
 @app.route('/update/<fitbitid>')
 def update_manual(fitbitid):

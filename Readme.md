@@ -12,6 +12,7 @@ Local
 - Install [autoenv](https://github.com/kennethreitz/autoenv) `pip install autoenv==1.0.0`
 - Activate virtual environment and variables `cd .` or `source .env`
 - Install dependencies in virtual environment `pip install -r requirements.txt`
+- (Optional) Install Redis, if you want to test subscriptions locally. On Mac run `brew install redis`
 
 Heroku (optional)
 --------
@@ -66,6 +67,9 @@ Setup Database
 Locally
 --------
 - Execute `python app.py`
+- (Optional) Do these only if you want to test Subscriptions locally
+	- Start Redis server in a new terminal `redis-server`
+	- Start worker in a new terminal `python worker.py`
 
 Heroku
 --------
