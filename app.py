@@ -21,12 +21,18 @@ client_secret = os.environ['FITBIT_APP_SECRET']
 verification_code = os.getenv('FITBIT_VERIFICATION_CODE', '')
 oauth = FitbitOauth2Client(client_id, client_secret)
 
+def auth_redirect_url():
+	base_domain = request.url_root[request.url_root.find('://'):]
+	protocol = 'https' if 'DYNO' in os.environ else 'http'
+	return "{}{}auth".format(protocol, base_domain)
+
 @app.route('/')
 def account_login():
 	"""
 	Login page for user to start the login process.
 	"""
-	url,_ = oauth.authorize_token_url(redirect_uri=request.url_root + "auth", 
+	print(auth_redirect_url())
+	url,_ = oauth.authorize_token_url(redirect_uri=auth_redirect_url(), 
 		scope=['activity', 'profile'])
 	return render_template('login.html', fitbit_auth_url=url)
 
@@ -35,7 +41,7 @@ def account_edit():
 	"""
 	Login validation and account edit
 	"""
-	oauth.fetch_access_token(request.args.get('code', ''), request.url_root + "auth")
+	oauth.fetch_access_token(request.args.get('code', ''), auth_redirect_url())
 	return render_template('account_edit.html', access_token=oauth.session.token['access_token'], 
 		refresh_token=oauth.session.token['refresh_token'], 
 		token_expiry_at=oauth.session.token['expires_at'])
