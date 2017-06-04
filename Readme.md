@@ -5,6 +5,7 @@ Tracks total distance covered by Fitbit user in this year using simple graphs. A
 
 # Setup
 ------------------------
+These instructions are for deploying your own version of this app. For normal use, you can just use the website in description. 
 
 Local
 -------
@@ -16,7 +17,7 @@ Local
 
 Heroku (optional)
 --------
-Below steps are required only of you want to deploy the app to Heroku.
+Below steps are required only if you want to deploy the app to Heroku.
 
 - Install [Heroku cli](https://devcenter.heroku.com/articles/heroku-cli) and [login](https://devcenter.heroku.com/articles/heroku-cli#getting-started)
 - Create a Heroku app `heroku create HEROKU-APP-NAME` (pick a app name)
