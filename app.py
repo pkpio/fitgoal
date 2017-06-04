@@ -86,7 +86,7 @@ def update_data(fitbitid):
 	"""
 	user = User.query.filter_by(fitbitid=fitbitid).first()
 	if not user:
-		return False
+		return None
 	fitbit_activity = FitbitActivity(client_id, client_secret, access_token=user.access_token, 
 		refresh_token=user.refresh_token, token_expires_at=user.token_expires_at,
 		types=user.activities)
@@ -95,17 +95,18 @@ def update_data(fitbitid):
 	user.refresh_token = fitbit_activity.refresh_token();
 	user.token_expires_at = fitbit_activity.token_expires_at();
 	db.session.commit()
-	return True
+	return user
 
 @app.route('/update/<fitbitid>')
 def update_manual(fitbitid):
 	"""
 	Update data for user with given fitbitid.
 	"""
-	if update_data(fitbitid):
-		return render_template('update.html', graph_url='/graphs/{}'.format(user.fitbitid))
-	else:
+	user = update_data(fitbitid)
+	if not user:
 		return "User {} not found".format(fitbitid)
+	else:
+		return render_template('update.html', graph_url='/graphs/{}'.format(user.fitbitid))
 
 @app.route('/update', methods=['POST'])
 def update_fitbit_push():
