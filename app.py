@@ -105,7 +105,7 @@ def update_fitbit_push():
 	"""
 	This endpoint is called by fitbit whenever there is a new activity for a user. Update by push.
 	"""
-	fitbitid = json.loads(request.get_json(force=True))[0]['ownerId']
+	fitbitid = json.loads(request.data)[0]['ownerId']
 	user = User.query.filter_by(fitbitid=fitbitid).first()
 	if user:
 		update_data(user)
