@@ -5,8 +5,7 @@ class User(db.Model):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String, nullable=False, unique=True)
-    fitbitid = db.Column(db.String)
+    fitbitid = db.Column(db.String, nullable=False, unique=True)
     access_token = db.Column(db.String)
     refresh_token = db.Column(db.String)
     token_expires_at = db.Column(db.Float)
@@ -14,9 +13,7 @@ class User(db.Model):
     activities = db.Column(postgresql.ARRAY(db.String))
     distances = db.Column(postgresql.ARRAY(db.Float))
 
-    def __init__(self, username, fitbitid, access_token, refresh_token, token_expires_at, target, 
-        activities):
-        self.username = username
+    def __init__(self, fitbitid, access_token, refresh_token, token_expires_at, target, activities):
         self.fitbitid = fitbitid
         self.access_token = access_token
         self.refresh_token = refresh_token
@@ -26,5 +23,5 @@ class User(db.Model):
         self.distances = []
 
     def __repr__(self):
-        return '<User(username={}, target={}, activities={})'.format(self.username, self.target, 
+        return '<User(fitbitid={}, target={}, activities={})'.format(self.fitbitid, self.target, 
             self.activities)
