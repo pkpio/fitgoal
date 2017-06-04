@@ -69,6 +69,7 @@ def account_finish():
 	db.session.commit()
 	fitbit_client.subscription(subscription_id=newuser.fitbitid, subscriber_id="1", 
 		collection='activities')
+	update_data(newuser.fitbitid)
 	return render_template('save.html', username=newuser.fullname, fitbitid=newuser.fitbitid)
 
 @app.route('/graphs/<fitbitid>')
