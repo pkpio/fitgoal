@@ -4,7 +4,6 @@ from fitbit.api import FitbitOauth2Client
 import fitbit
 from flask.ext.sqlalchemy import SQLAlchemy
 from activity import FitbitActivity
-import json
 
 app = Flask(__name__)
 app.config.from_object(os.environ['APP_SETTINGS'])
@@ -105,7 +104,7 @@ def update_fitbit_push():
 	"""
 	This endpoint is called by fitbit whenever there is a new activity for a user. Update by push.
 	"""
-	fitbitid = json.loads(request.data)[0]['ownerId']
+	fitbitid = request.get_json()[0]['ownerId']
 	user = User.query.filter_by(fitbitid=fitbitid).first()
 	if user:
 		update_data(user)
