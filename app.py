@@ -18,7 +18,7 @@ START_DATE = "2017-01-01" # Tracking from start of 2017
 from models import *
 client_id = os.environ['FITBIT_APP_ID']
 client_secret = os.environ['FITBIT_APP_SECRET']
-verification_code = os.environ['FITBIT_VERIFICATION_CODE']
+verification_code = os.getenv('FITBIT_VERIFICATION_CODE', '')
 oauth = FitbitOauth2Client(client_id, client_secret)
 
 @app.route('/')
