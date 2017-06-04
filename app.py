@@ -4,11 +4,15 @@ from fitbit.api import FitbitOauth2Client
 import fitbit
 from flask.ext.sqlalchemy import SQLAlchemy
 from activity import FitbitActivity
+from rq import Queue
+from rq.job import Job
+from worker import conn
 
 app = Flask(__name__)
 app.config.from_object(os.environ['APP_SETTINGS'])
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+q = Queue(connection=conn)
 START_DATE = "2017-01-01" # Tracking from start of 2017
 
 from models import *
@@ -76,10 +80,13 @@ def user_graphs(fitbitid):
 	return render_template('graphs.html', fullname=user.fullname, distances=user.distances, 
 		target=user.target)
 
-def update_data(user):
+def update_data(fitbitid):
 	"""
-	Update data for given user.
+	Update data for user with given fitbitid.
 	"""
+	user = User.query.filter_by(fitbitid=fitbitid).first()
+	if not user:
+		return False
 	fitbit_activity = FitbitActivity(client_id, client_secret, access_token=user.access_token, 
 		refresh_token=user.refresh_token, token_expires_at=user.token_expires_at,
 		types=user.activities)
@@ -94,11 +101,10 @@ def update_manual(fitbitid):
 	"""
 	Update data for user with given fitbitid.
 	"""
-	user = User.query.filter_by(fitbitid=fitbitid).first()
-	if not user:
-		return 'User {} not found'.format(fitbitid)
-	update_data(user)
-	return render_template('update.html', graph_url='/graphs/{}'.format(user.fitbitid))
+	if update_data(fitbitid):
+		return render_template('update.html', graph_url='/graphs/{}'.format(user.fitbitid))
+	else:
+		return "User {} not found".format(fitbitid)
 
 @app.route('/update', methods=['POST'])
 def update_fitbit_push():
@@ -106,9 +112,8 @@ def update_fitbit_push():
 	This endpoint is called by fitbit whenever there is a new activity for a user. Update by push.
 	"""
 	fitbitid = request.get_json()[0]['ownerId']
-	user = User.query.filter_by(fitbitid=fitbitid).first()
-	if user:
-		update_data(user)
+	jobid = q.enqueue_call(func='app.update_data', args=(fitbitid,), result_ttl=5000)
+	print("scheduled update for {} with jobid: {}".format(fitbitid, jobid))
 	return 'thanks fitbit', 204
 
 @app.route('/update', methods=['GET'])
@@ -117,7 +122,6 @@ def verify_subscription():
 	This endpoint is called by fitbit for verification of subscription endpoint.
 	"""
 	received_code = request.args.get('verify', '')
-	print(verification_code)
 	if received_code == verification_code:
 		return 'correct', 204
 	else:
