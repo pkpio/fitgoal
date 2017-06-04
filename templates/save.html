@@ -2,6 +2,7 @@
 <html>
   <head> 
     {% include "bootstrap.html" %}
+    <meta http-equiv="refresh" content="2; url=/graphs/{{ fitbitid }}" />
   </head>
   <body>
     {% with title="Fitgoal - Setup finish" %}
@@ -9,7 +10,7 @@
     {% endwith %}
     <center>
       <h4>Setup successful for {{ username }}</h4>
-      <a href="/graphs/{{ fitbitid }}" class="btn btn-default">See your graph</a>
+      <p>Redirecting to graph ...</p>
     </center>
     {% include "footer.html" %}
   </body>
