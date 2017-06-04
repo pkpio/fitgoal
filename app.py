@@ -46,34 +46,35 @@ def account_finish():
 		activities.append('Run')
 	if request.form.get('Biking', None):
 		activities.append('Bike')
-	try:
-		fitbit_client = fitbit.Fitbit(client_id, client_secret, 
-			access_token=request.form['access_token'], 
-			refresh_token=request.form['refresh_token'])
-		profile = fitbit_client.user_profile_get()
-		user = User(
-			username=request.form['username'],
-			fitbitid=profile['user']['encodedId'],
-			access_token=request.form['access_token'], 
-			refresh_token=request.form['refresh_token'], 
-			token_expires_at=request.form['token_expiry_at'],
-			target=request.form['target'], activities=activities
-			)
-		db.session.add(user)
-		db.session.commit()
-	except Exception as e:
-		return "Unable to save to database."
-	return render_template('save.html', username=user.username)
+	fitbit_client = fitbit.Fitbit(client_id, client_secret, 
+		access_token=request.form['access_token'], 
+		refresh_token=request.form['refresh_token'])
+	profile = fitbit_client.user_profile_get()
+	dbuser = User.query.filter_by(fitbitid=profile['user']['encodedId']).first()
+	newuser = User(
+		fitbitid=profile['user']['encodedId'],
+		fullname=profile['user']['fullName'],
+		access_token=request.form['access_token'], 
+		refresh_token=request.form['refresh_token'], 
+		token_expires_at=request.form['token_expiry_at'],
+		target=request.form['target'], activities=activities
+		)
+	if dbuser:
+		newuser.id = dbuser.id
+	db.session.merge(newuser)
+	db.session.commit()
+	return render_template('save.html', username=newuser.fullname, fitbitid=newuser.fitbitid)
 
-@app.route('/graphs/<username>')
-def user_graphs(username):
+@app.route('/graphs/<fitbitid>')
+def user_graphs(fitbitid):
 	"""
 	Graphs of user.
 	"""
-	user = User.query.filter_by(username=username).first()
+	user = User.query.filter_by(fitbitid=fitbitid).first()
 	if not user:
-		return 'User {} not found'.format(username)
-	return render_template('graphs.html', distances=user.distances, target=user.target)
+		return 'User {} not found'.format(fitbitid)
+	return render_template('graphs.html', fullname=user.fullname, distances=user.distances, 
+		target=user.target)
 
 def update_data(user):
 	"""
@@ -88,16 +89,16 @@ def update_data(user):
 	user.token_expires_at = fitbit_activity.token_expires_at();
 	db.session.commit()
 
-@app.route('/update/<username>')
-def update_manual(username):
+@app.route('/update/<fitbitid>')
+def update_manual(fitbitid):
 	"""
-	Update data for given username.
+	Update data for user with given fitbitid.
 	"""
-	user = User.query.filter_by(username=username).first()
+	user = User.query.filter_by(fitbitid=fitbitid).first()
 	if not user:
-		return 'User {} not found'.format(username)
+		return 'User {} not found'.format(fitbitid)
 	update_data(user)
-	return render_template('update.html', graph_url='/graphs/{}'.format(user.username))
+	return render_template('update.html', graph_url='/graphs/{}'.format(user.fitbitid))
 
 @app.route('/update', methods=['POST'])
 def update_fitbit_push():

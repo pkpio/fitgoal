@@ -8,7 +8,7 @@
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body ng-controller="MainController">
-	{% with title="Fitgoal - Activities 2017" %}
+	{% with title="Fitgoal 2017 for " + fullname %}
 	{% include "header.html" %}
 	{% endwith %}
 	<center id="graphs" ng-init="init( {{ distances }}, {{ target }} )">
