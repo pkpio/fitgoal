@@ -100,16 +100,16 @@ def update_data(fitbitid):
 	db.session.commit()
 	return user
 
-@app.route('/update/<fitbitid>')
-def update_manual(fitbitid):
-	"""
-	Update data for user with given fitbitid.
-	"""
-	user = update_data(fitbitid)
-	if not user:
-		return "User {} not found".format(fitbitid)
-	else:
-		return render_template('update.html', graph_url='/graphs/{}'.format(user.fitbitid))
+# @app.route('/update/<fitbitid>')
+# def update_manual(fitbitid):
+# 	"""
+# 	Update data for user with given fitbitid.
+# 	"""
+# 	user = update_data(fitbitid)
+# 	if not user:
+# 		return "User {} not found".format(fitbitid)
+# 	else:
+# 		return render_template('update.html', graph_url='/graphs/{}'.format(user.fitbitid))
 
 @app.route('/update', methods=['POST'])
 def update_fitbit_push():
