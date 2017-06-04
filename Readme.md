@@ -5,6 +5,7 @@ Tracks total distance covered by Fitbit user in this year using simple graphs. A
 
 # Setup
 ------------------------
+These instructions are for deploying your own version of this app. For normal use, you can just use the website in description. 
 
 Local
 -------
