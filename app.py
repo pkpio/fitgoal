@@ -7,6 +7,7 @@ from activity import FitbitActivity
 from rq import Queue
 from rq.job import Job
 from worker import conn
+from convertor import Convertor
 
 app = Flask(__name__)
 app.config.from_object(os.environ['APP_SETTINGS'])
@@ -46,16 +47,30 @@ def account_edit():
 		refresh_token=oauth.session.token['refresh_token'], 
 		token_expiry_at=oauth.session.token['expires_at'])
 
+def get_selected_activities():
+	activities = []
+	if request.form.get('Walking', None):
+		activities.append('Walk')
+	if request.form.get('Running', None):
+		activities.append('Run')
+		activities.append('Treadmill')
+	if request.form.get('Biking', None):
+		activities.append('Bike')
+	if request.form.get('Swimming', None):
+		activities.append('Swim')
+	if request.form.get('Rowing', None):
+		activities.append('Rowing')
+		activities.append('Rowing Machine')
+	if request.form.get('Hiking', None):
+		activities.append('Hike')
+	return activities
+
+
 @app.route('/save', methods=['GET', 'POST'])
 def account_finish():
 	"""
 	Finalize account setup. Save user handle and keys.
 	"""
-	activities = []
-	if request.form.get('Running', None):
-		activities.append('Run')
-	if request.form.get('Biking', None):
-		activities.append('Bike')
 	fitbit_client = fitbit.Fitbit(client_id, client_secret, 
 		access_token=request.form['access_token'], 
 		refresh_token=request.form['refresh_token'])
@@ -67,7 +82,7 @@ def account_finish():
 		access_token=request.form['access_token'], 
 		refresh_token=request.form['refresh_token'], 
 		token_expires_at=request.form['token_expiry_at'],
-		target=request.form['target'], activities=activities
+		target=request.form['target'], activities=get_selected_activities()
 		)
 	if dbuser:
 		newuser.id = dbuser.id
@@ -86,6 +101,10 @@ def user_graphs(fitbitid):
 	user = User.query.filter_by(fitbitid=fitbitid).first()
 	if not user:
 		return 'User {} not found'.format(fitbitid)
+	# update if data is older than a day
+	if len(user.distances) < Convertor(START_DATE).daysSinceStart('today') + 1:
+		update_data(fitbitid)
+		user = User.query.filter_by(fitbitid=fitbitid).first()
 	return render_template('graphs.html', fullname=user.fullname, distances=user.distances, 
 		target=user.target)
 
