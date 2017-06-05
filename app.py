@@ -65,7 +65,6 @@ def get_selected_activities():
 		activities.append('Hike')
 	return activities
 
-
 @app.route('/save', methods=['GET', 'POST'])
 def account_finish():
 	"""
